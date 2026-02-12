@@ -2,41 +2,60 @@
 #include<GLFW/glfw3.h>
 #include<iostream>
 
+int g_WindowSizeX = 640;
+int g_WindowSizeY = 480;
+
+void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
+{
+    g_WindowSizeX = width;
+    g_WindowSizeY = height;
+    glViewport(0, 0, g_WindowSizeX, g_WindowSizeY);
+}
 int main(void)
 {
-    GLFWwindow* window;
-
     /* Initialize the library */
     if (!glfwInit())
+    {
+		std::cout << "Cant initialize GLFW" << std::endl; 
         return -1;
+    }
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
+    GLFWwindow* pWindow = glfwCreateWindow(g_WindowSizeX, g_WindowSizeY, "Thunder Engine", nullptr, nullptr);
+    if (!pWindow)
     {
+        std::cout << "Cant create window" << std::endl;
         glfwTerminate();
         return -1;
     }
 
+	glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
+
     /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(pWindow);
 
     if (!gladLoadGL())
     {
-        std::cout<<"Cant load GLAD:("<<std::endl;
+        std::cout<<"Cant load GLAD"<<std::endl;
         return -1;
     }
-    std::cout<<"OpenGL"<<GLVersion.major<<"."<< GLVersion.minor<<std::endl;
+
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
     glClearColor(0,1,0,1);
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(pWindow))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(pWindow);
 
         /* Poll for and process events */
         glfwPollEvents();
