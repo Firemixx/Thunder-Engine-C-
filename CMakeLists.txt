@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 4.2.3 FATAL_ERROR)
 set(PROJECT_NAME Thunder-Engine-C-)
 project(${PROJECT_NAME})
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+file(GLOB_RECURSE SOURCES
+    src/*.cpp
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -14,4 +18,6 @@ target_link_libraries(${PROJECT_NAME} glfw)
 
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
+
+target_include_directories(${PROJECT_NAME} PRIVATE src)
 
