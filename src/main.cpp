@@ -1,25 +1,28 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<iostream>
-#include "TE.Core/windowInitializer.h"
-#include "TE.Core/glfwInitializer.h"
+#include "TE.Core/Window/windowInitializer.h"
+#include "TE.Core/GLFW/glfwInitializer.h"
+#include "TE.Input/InputCallback.h"
 
 int main(void)
 {
-	glfwInitializer::glfwInitializer GLFWInitializer;
+	glfwInitializer::glfwInitializer _GLFWInitializer;
+    WindowInitializer::windowInitializer _WindInitializer;
+    InputCallback::Callbacks _input;
 
-	GLFWInitializer.Init();
+	_GLFWInitializer.Init();
 
-    WindowInitializer::windowInitializer WindInitializer;
 
-	GLFWwindow* pWindow = WindInitializer.InitWindow();
+	GLFWwindow* pWindow = _WindInitializer.InitWindow();
 
     if (pWindow == NULL)
     {
         return -1;
     }
 
-	glfwSetWindowSizeCallback(pWindow, WindInitializer.glfwWindowSizeCallback);
+	glfwSetWindowSizeCallback(pWindow, _WindInitializer.glfwWindowSizeCallback);
+	glfwSetKeyCallback(pWindow, _input.key_callback);
     glClearColor(0,1,0,1);
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(pWindow))
